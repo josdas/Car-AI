@@ -21,9 +21,10 @@ inline size_t Race::goal_count() const {
 	return start_goals.size();
 }
 
-inline Race::Race(const std::vector<Point>& start_goals, const Point& start_position, const Point& start_direction): start_goals(start_goals),
-                                                                                                                     start_position(start_position),
-                                                                                                                     start_direction(start_direction) {}
+inline Race::Race(const std::vector<Point>& start_goals, const Point& start_position, const Point& start_direction): 
+	start_goals(start_goals),
+	start_position(start_position),
+	start_direction(start_direction) {}
 
 inline Race_log Race::play(Car* car) const {
 	Race_log log;
@@ -39,7 +40,7 @@ inline Race_log Race::play(Car* car) const {
 			for (auto goal : goals) {
 				if (distance(pos, goal) > GOAL_RANGE) {
 					new_goals.push_back(goal);
-					log.value += distance(pos, goal);
+					log.value += distance(pos, goal) * D_TIME;
 				}
 				else {
 					log.coin++;
@@ -47,12 +48,13 @@ inline Race_log Race::play(Car* car) const {
 			}
 			goals = new_goals;
 		}
+		log.time = time;
+		log.points.push_back(pos);
+
 		if (goals.empty()) {
 			break;
 		}
 
-		log.time = time;
-		log.points.push_back(pos);
 		auto action = car->action(pos, dir, v, goals);
 		double speed = action.first;
 		double angle = action.second;
@@ -70,7 +72,7 @@ inline Race_log Race::play(Car* car) const {
 		if (v < -MAX_SPEED) {
 			v = -MAX_SPEED;
 		}
-		dir = normolize(rotation(dir, angle * D_TIME * ROTATION_SPEED * v / MAX_SPEED)); // TODO
+		dir = normolize(rotation(dir, angle * D_TIME * ROTATION_SPEED));
 
 		pos = pos + dir * v * D_TIME;
 	}

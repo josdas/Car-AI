@@ -19,7 +19,7 @@ public:
 inline Car::Car(const Neural_network& neural_network): neural_network(neural_network) {}
 
 inline std::pair<double, double> Car::action(Point pos, Point dir, double v, std::vector<Point> const& goals) {
-	std::vector<double> data(HALF_SECTOR_COUNT * 8 + 1, NEURAL_INF);
+	std::vector<double> data(HALF_SECTOR_COUNT * 4 + 1, NEURAL_INF);
 	std::vector<std::vector<double> > sector_distanse(HALF_SECTOR_COUNT * 4, std::vector<double>(2, NEURAL_INF));
 
 	for (auto goal : goals) {
@@ -48,18 +48,13 @@ inline std::pair<double, double> Car::action(Point pos, Point dir, double v, std
 	}
 	for(int i = 0; i < HALF_SECTOR_COUNT * 2; i++) {
 		data[i] = sector_distanse[i][0];
-		data[i + HALF_SECTOR_COUNT * 2 + 1] = sector_distanse[i + HALF_SECTOR_COUNT * 2][0];
-		data[i + HALF_SECTOR_COUNT * 4 + 1] = sector_distanse[i][1];
-		data[i + HALF_SECTOR_COUNT * 6 + 1] = sector_distanse[i + HALF_SECTOR_COUNT * 2][1];
+		data[i + HALF_SECTOR_COUNT * 2] = sector_distanse[i + HALF_SECTOR_COUNT * 2][0];
 	}
-	data[HALF_SECTOR_COUNT * 2] = v;
+	data.back() = v;
 
 	auto result = neural_network.get(data);
+
 	assert(!isnan(result[0]));
 	assert(!isnan(result[1]));
-	if(isnan(result[0])) {
-		std::cerr << "FUCK";
-		exit(1);
-	}
 	return { result[0], result[1] };
 }
