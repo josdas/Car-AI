@@ -78,17 +78,22 @@ Race_log run_race(Race const& race, Car& car) {
 	return race.play(&car);
 }
 
-double test(Neural_network const& neural_network, vector<Race> const& races, double s = 1000000) {
+double test(Neural_network const& neural_network, vector<Race> const& races, double s = 10000) {
 	double sum = 0;
 	double mi = INF;
 	Car car(neural_network);
 	for(auto const& race : races) {
 		auto log = run_race(race, car);
-		double t = (race.goal_count() - log.coin) * s + log.time + log.value / 3000 * 0;
+		double t = (race.goal_count() - log.coin) * s + log.time + log.value;
+		for (auto e : log.direction) {
+			if (e == Race_log::FORWARD) {
+				t -= 1;
+			}
+		}
 		sum += t;
 		mi = max(t, mi);
 	}
-	return -(sum + mi) / 2;
+	return -(sum + mi * 3) / 4;
 }
 double super_test(Neural_network const& neural_network, vector<Race> const& races, double s = -10) {
 	double sum = 0;
@@ -101,13 +106,14 @@ double super_test(Neural_network const& neural_network, vector<Race> const& race
 }
 
 int main() {
-	auto neural_network = Neural_network(read_coeff("n3"));
-	neural_network.resize_layers(vector<int>{49, 60, 60, 2});
-//	auto neural_network = Neural_network(vector<Layer*>{
-//		new Actiev_layer_const<active_function_B>(13, 25),
-//		new Actiev_layer_const<active_function_B>(25, 25),
-//		new Actiev_layer_const<active_function_B>(25, 2)
-//	});
+	//auto neural_network = Neural_network(read_coeff("r1"));
+	//neural_network.resize_layers(vector<int>{49, 60, 60, 2});
+	auto neural_network = Neural_network(vector<Layer*>{
+		new Actiev_layer_const<active_function_B>(49, 25),
+		new Actiev_layer_const<active_function_B>(25, 25),
+		new Max_layer(25, 25),
+		new Actiev_layer_const<active_function_B>(25, 2)
+	});
 	vector<Race> races;
 	double result = 0;
 	double s = 3, d = 100;

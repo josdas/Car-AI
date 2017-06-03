@@ -12,12 +12,12 @@ class Race {
 	Point start_direction;
 
 public:
-	int goal_count() const;
+	size_t goal_count() const;
 	Race(const std::vector<Point>& start_goals, const Point& start_position, const Point& start_direction);
 	Race_log play(Car* car) const;
 };
 
-inline int Race::goal_count() const {
+inline size_t Race::goal_count() const {
 	return start_goals.size();
 }
 
@@ -70,7 +70,7 @@ inline Race_log Race::play(Car* car) const {
 		if (v < -MAX_SPEED) {
 			v = -MAX_SPEED;
 		}
-		dir = rotation(dir, angle * D_TIME * ROTATION_SPEED);
+		dir = normolize(rotation(dir, angle * D_TIME * ROTATION_SPEED * v / MAX_SPEED)); // TODO
 
 		pos = pos + dir * v * D_TIME;
 	}

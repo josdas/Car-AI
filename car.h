@@ -24,7 +24,7 @@ inline std::pair<double, double> Car::action(Point pos, Point dir, double v, std
 
 	for (auto goal : goals) {
 		double e = atan2(cross_product(goal - pos, dir), dot_product(goal - pos, dir));
-		for (double sector = -HALF_SECTOR_COUNT; sector < HALF_SECTOR_COUNT; sector++) {
+		for (int sector = -HALF_SECTOR_COUNT; sector < HALF_SECTOR_COUNT; sector++) {
 			double l = PI * sector / HALF_SECTOR_COUNT;
 			double r = l + PI / HALF_SECTOR_COUNT;
 			if (l <= e && e < r) {

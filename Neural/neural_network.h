@@ -5,17 +5,7 @@
 #include <ostream>
 #include "../my_stream.h"
 #include "active_layer_const.h"
-
-
-const size_t NUMBER_OF_ACTIVE_FUNCTION = 3;
-enum layer_type {
-	ACTIVE_A,
-	ACTIVE_B,
-	ACTIVE_L,
-	ACTIVE_A_CONST,
-	ACTIVE_B_CONST,
-	ACTIVE_L_CONST,
-};
+#include "max_layer.h"
 
 struct Neural_coef {
 	friend std::ostream& operator<<(std::ostream& out, const Neural_coef& a);
@@ -118,6 +108,13 @@ inline Neural_network::Neural_network(Neural_coef const& coef) {
 				coef.layers_size[i],
 				stream
 			));
+			break;
+		case MAX:
+			layers.emplace_back(new Max_layer(
+				coef.layers_size[i - 1],
+				coef.layers_size[i],
+				stream
+				));
 			break;
 		default: 
 			assert(false);

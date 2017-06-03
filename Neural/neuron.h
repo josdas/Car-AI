@@ -1,6 +1,17 @@
 #pragma once
 #include <algorithm>
 
+const size_t NUMBER_OF_ACTIVE_FUNCTION = 3;
+enum layer_type {
+	ACTIVE_A,
+	ACTIVE_B,
+	ACTIVE_L,
+	ACTIVE_A_CONST,
+	ACTIVE_B_CONST,
+	ACTIVE_L_CONST,
+	MAX
+};
+
 struct active_function_A {
 	static double active_function(double x) {
 		if (x > 30)

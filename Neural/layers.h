@@ -12,6 +12,8 @@ protected:
 	size_t input_size;
 	size_t output_size;
 
+	virtual void resize_other(int in, int out) {};
+
 public:
 	virtual ~Layer() = default;
 	explicit Layer(const std::vector<std::vector<double> >& neurons);
@@ -29,7 +31,8 @@ public:
 	size_t get_output_size() const;
 	virtual int get_type() = 0;
 
-	virtual void resize(int in, int out) = 0;
+	virtual void resize(int in, int out);
+
 };
 
 inline Layer::Layer(const std::vector<std::vector<double> >& neurons):
@@ -84,4 +87,17 @@ inline size_t Layer::get_input_size() const {
 
 inline size_t Layer::get_output_size() const {
 	return output_size;
+}
+
+inline void Layer::resize(int in, int out) {
+	resize_other(in, out);
+	neurons.resize(out);
+	for (size_t i = 0; i < out; i++) {
+		neurons[i].resize(in);
+		for (size_t j = input_size; j < in; j++) {
+			neurons[i][j] = get_rand_double(0.5);
+		}
+	}
+	input_size = in;
+	output_size = out;
 }
