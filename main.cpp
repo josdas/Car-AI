@@ -78,13 +78,13 @@ Race_log run_race(Race const& race, Car& car) {
 	return race.play(&car);
 }
 
-double test(Neural_network const& neural_network, vector<Race> const& races, double s = 1000) {
+double test(Neural_network const& neural_network, vector<Race> const& races, double s = 1000000) {
 	double sum = 0;
 	double mi = INF;
 	Car car(neural_network);
 	for(auto const& race : races) {
 		auto log = run_race(race, car);
-		double t = (race.goal_count() - log.coin) * s + log.time * 10 + log.value / 30000000000;
+		double t = (race.goal_count() - log.coin) * s + log.time + log.value / 3000 * 0;
 		sum += t;
 		mi = max(t, mi);
 	}
@@ -101,7 +101,8 @@ double super_test(Neural_network const& neural_network, vector<Race> const& race
 }
 
 int main() {
-	auto neural_network = Neural_network(read_coeff("e3"));
+	auto neural_network = Neural_network(read_coeff("n1"));
+
 //	auto neural_network = Neural_network(vector<Layer*>{
 //		new Actiev_layer_const<active_function_B>(13, 25),
 //		new Actiev_layer_const<active_function_B>(25, 25),
@@ -109,7 +110,7 @@ int main() {
 //	});
 	vector<Race> races;
 	double result = 0;
-	double s = 3, d = 100;
+	double s = 3, d = 10;
 	for (int i = 0; get_time() < TIME_TO_END; i++) {
 		if(i % 30 == 0) {
 			races.clear();
@@ -158,7 +159,7 @@ int main() {
 				<< "S=" << s << ' '
 				<< "D=" << d << "\n\n";
 		}
-		if(i % 10 == 0) {
+		if(i % 50 == 0) {
 			d *= 0.98;
 			s *= 0.99;
 		}

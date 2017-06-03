@@ -54,6 +54,7 @@ public:
 	std::vector<double> get(std::vector<double> const& data) const;
 	std::vector<std::vector<std::vector<double> > > get_neurons_weight() const;
 	Neural_coef get_coefficient() const;
+	void resize_layers(const std::vector<int>& sizes);
 };
 
 
@@ -160,4 +161,10 @@ inline Neural_coef Neural_network::get_coefficient() const {
 		layers_size.push_back(v->get_output_size());
 	}
 	return Neural_coef(layers_size, result, layers_type);
+}
+
+inline void Neural_network::resize_layers(const std::vector<int>& sizes) {
+	for (size_t i = 0; i < layers.size(); i++) {
+		layers[i].get()->resize(sizes[i], sizes[i + 1]);
+	}
 }

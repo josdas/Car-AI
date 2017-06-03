@@ -28,6 +28,8 @@ public:
 	size_t get_input_size() const;
 	size_t get_output_size() const;
 	virtual int get_type() = 0;
+
+	virtual void resize(int in, int out) = 0;
 };
 
 inline Layer::Layer(const std::vector<std::vector<double> >& neurons):

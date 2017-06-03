@@ -19,7 +19,7 @@ public:
 inline Car::Car(const Neural_network& neural_network): neural_network(neural_network) {}
 
 inline std::pair<double, double> Car::action(Point pos, Point dir, double v, std::vector<Point> const& goals) {
-	std::vector<double> data(HALF_SECTOR_COUNT * 2, NEURAL_INF);
+	std::vector<double> data(HALF_SECTOR_COUNT * 4 + 1, NEURAL_INF);
 
 	for (auto goal : goals) {
 		double e = atan2(cross_product(goal - pos, dir), dot_product(goal - pos, dir));
@@ -27,11 +27,22 @@ inline std::pair<double, double> Car::action(Point pos, Point dir, double v, std
 			double l = PI * sector / HALF_SECTOR_COUNT;
 			double r = l + PI / HALF_SECTOR_COUNT;
 			if (l <= e && e < r) {
-				data[sector + HALF_SECTOR_COUNT] = std::min(data[sector + HALF_SECTOR_COUNT], distance(pos, goal));
+				int ind = sector + HALF_SECTOR_COUNT;
+				data[ind] = std::min(data[ind], distance(pos, goal));
+			}
+
+			e += PI / HALF_SECTOR_COUNT / 2;
+			if(e > PI) {
+				e -= 2 * PI;
+			}
+
+			if (l <= e && e < r) {
+				int ind = sector + HALF_SECTOR_COUNT * 2 + 1;
+				data[ind] = std::min(data[ind], distance(pos, goal));
 			}
 		}
 	}
-	data.push_back(v);
+	data[HALF_SECTOR_COUNT * 2] = v;
 
 	auto result = neural_network.get(data);
 	assert(!isnan(result[0]));

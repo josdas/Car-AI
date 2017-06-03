@@ -17,6 +17,9 @@ public:
 	std::vector<double> get(std::vector<double> const& data) const override;
 	std::vector<double> get_coefficient() const override;
 	int get_type() override;
+
+protected:
+	void resize_other(int in, int out) override;
 };
 
 template <class T>
@@ -60,6 +63,14 @@ std::vector<double> Actiev_layer_const<T>::get_coefficient() const {
 template <class T>
 int Actiev_layer_const<T>::get_type() {
 	return T::type_number + NUMBER_OF_ACTIVE_FUNCTION;
+}
+
+template <class T>
+void Actiev_layer_const<T>::resize_other(int in, int out) {
+	cnst.resize(out);
+	for(size_t i = get_output_size(); i < out; i++) {
+		cnst[i] = get_rand_double(0.5);
+	}
 }
 
 template <class T>

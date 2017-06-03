@@ -9,6 +9,8 @@ class Active_layer: public Layer {
 protected:
 	std::vector<double> active(std::vector<double>& data) const;
 	std::vector<double> get_sum(std::vector<double> const& data) const;
+
+	virtual void resize_other(int in, int out) {};
 public:
 	explicit Active_layer(const std::vector<std::vector<double> >& neurons);
 	Active_layer(size_t in, size_t out);
@@ -17,6 +19,8 @@ public:
 
 	virtual std::vector<double> get(std::vector<double> const& data) const override;
 	int get_type() override;
+
+	virtual void resize(int in, int out) override;
 };
 
 template <class T>
@@ -59,4 +63,18 @@ std::vector<double> Active_layer<T>::get(std::vector<double> const& data) const 
 template <class T>
 int Active_layer<T>::get_type() {
 	return T::type_number;
+}
+
+template <class T>
+void Active_layer<T>::resize(int in, int out) {
+	resize_other(in, out);
+	neurons.resize(out);
+	for (size_t i = 0; i < out; i++) {
+		neurons[i].resize(in);
+		for (size_t j = input_size; j < in; j++) {
+			neurons[i][j] = get_rand_double(0.5);
+		}
+	}
+	input_size = in;
+	output_size = out;
 }
