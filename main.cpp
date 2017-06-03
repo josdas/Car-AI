@@ -101,8 +101,8 @@ double super_test(Neural_network const& neural_network, vector<Race> const& race
 }
 
 int main() {
-	auto neural_network = Neural_network(read_coeff("n1"));
-
+	auto neural_network = Neural_network(read_coeff("n3"));
+	neural_network.resize_layers(vector<int>{49, 60, 60, 2});
 //	auto neural_network = Neural_network(vector<Layer*>{
 //		new Actiev_layer_const<active_function_B>(13, 25),
 //		new Actiev_layer_const<active_function_B>(25, 25),
@@ -110,7 +110,7 @@ int main() {
 //	});
 	vector<Race> races;
 	double result = 0;
-	double s = 3, d = 10;
+	double s = 3, d = 100;
 	for (int i = 0; get_time() < TIME_TO_END; i++) {
 		if(i % 30 == 0) {
 			races.clear();
