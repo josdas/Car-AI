@@ -11,4 +11,4 @@ const double GOAL_RANGE = 2;
 const int RACE_COUNT = 50;
 const int MAX_COINT = 1;
 const double MAX_SIZE = 30;
-const double TIME_TO_END = 60 * 10;
+const double TIME_TO_END = 60 * 0;

@@ -48,12 +48,12 @@ inline Race_log Race::play(Car* car) const {
 			}
 			goals = new_goals;
 		}
-		log.time = time;
-		log.points.push_back(pos);
 
 		if (goals.empty()) {
 			break;
 		}
+		log.time = time;
+		log.points.push_back(pos);
 
 		auto action = car->action(pos, dir, v, goals);
 		double speed = action.first;

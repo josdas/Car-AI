@@ -84,7 +84,7 @@ double test(Neural_network const& neural_network, vector<Race> const& races, dou
 	Car car(neural_network);
 	for(auto const& race : races) {
 		auto log = run_race(race, car);
-		double t = (race.goal_count() - log.coin) * s + log.time + log.value / 3000;
+		double t = (race.goal_count() - log.coin) * s + log.time + log.value;
 		sum += t;
 		mi = max(t, mi);
 	}
@@ -101,13 +101,13 @@ double super_test(Neural_network const& neural_network, vector<Race> const& race
 }
 
 int main() {
-	//auto neural_network = Neural_network(read_coeff("b"));
+	auto neural_network = Neural_network(read_coeff("a"));
 	//neural_network.resize_layers(vector<int>{49, 60, 60, 2});
-	auto neural_network = Neural_network(vector<Layer*>{
-		new Actiev_layer_const<active_function_B>(25, 30),
-		new Actiev_layer_const<active_function_A>(30, 30),
-		new Actiev_layer_const<active_function_B>(30, 2)
-	});
+//	auto neural_network = Neural_network(vector<Layer*>{
+//		new Actiev_layer_const<active_function_B>(25, 30),
+//		new Actiev_layer_const<active_function_A>(30, 30),
+//		new Actiev_layer_const<active_function_B>(30, 2)
+//	});
 	vector<Race> races;
 	double result = 0;
 	double s = 2, d = 100;
@@ -158,7 +158,7 @@ int main() {
 				<< "S=" << s << ' '
 				<< "D=" << d << "\n\n";
 		}
-		if(i % 2 == 0) {
+		if(i % 10 == 0) {
 			d *= 0.98;
 			s *= 0.99;
 		}
